@@ -1,5 +1,6 @@
 {
   "name": "homebridge-xstate",
+  "displayName": "XState",
   "version": "1.0.0",
   "description": "XState Statemachines for Homebridge",
   "main": "dist/xstate-platform.js",
