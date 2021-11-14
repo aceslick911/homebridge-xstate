@@ -37,13 +37,7 @@ module.exports = {
     "prefer-template": "error",
     "no-autofix/prefer-const": "warn",
     "no-unused-private-class-members": "off",
-    indent: [
-      "error",
-      2,
-      {
-        SwitchCase: 1,
-      },
-    ],
+
     "linebreak-style": ["error", "unix"],
     curly: 1,
 

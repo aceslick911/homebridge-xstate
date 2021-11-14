@@ -1,3 +1,5 @@
+import { LightMachine } from "./statecharts/light";
+
 /**
  * This is the name of the platform that users will use to register the plugin in the Homebridge config.json
  */
@@ -25,6 +27,7 @@ export const xstateDevices = [
       name:'Motion Sensor One Name',
       id:'YourUniqueIdentifier-1'
     },
+    stateChart:LightMachine,
   },
   {
     id: 'EFGH',
@@ -32,6 +35,7 @@ export const xstateDevices = [
     motionSensor:  {
       name:'Motion Sensor Two Name',
       id:'YourUniqueIdentifier-2'
-    }
+    },
+    stateChart:LightMachine,
   }
 ];
