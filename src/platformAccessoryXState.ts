@@ -1,6 +1,7 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
 import { XStatePlatform } from './platformXState';
+import { DEFAULTS, MotionDevices } from './settings';
 
 /**
  * Platform Accessory
@@ -16,19 +17,19 @@ export class XStatePlatformAccessory {
    */
   private exampleStates = {
     On: false,
-    Brightness: 100,
+    Brightness: 100
   };
 
   constructor(
     private readonly platform: XStatePlatform,
-    private readonly accessory: PlatformAccessory,
+    private readonly accessory: PlatformAccessory
   ) {
 
     // set accessory information
-    this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Default-Manufacturer')
-      .setCharacteristic(this.platform.Characteristic.Model, 'Default-Model')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, 'Default-Serial');
+    const service = this.accessory.getService(this.platform.Service.AccessoryInformation)!;
+    for(const charac in DEFAULTS.Characteristics){
+      service.setCharacteristic(this.platform.Characteristic[charac], DEFAULTS.Characteristics[charac]);      
+    }
 
     // get the LightBulb service if it exists, otherwise create a new LightBulb service
     // you can create multiple services for each accessory
@@ -36,7 +37,8 @@ export class XStatePlatformAccessory {
 
     // set the service name, this is what is displayed as the default name on the Home app
     // in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
-    this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
+    console.log("setting name..", accessory.context.device)
+    this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.name);
 
     // each service must implement at-minimum the "required characteristics" for the given service type
     // see https://developers.homebridge.io/#/service/Lightbulb
@@ -61,12 +63,13 @@ export class XStatePlatformAccessory {
      * can use the same sub type id.)
      */
 
-    // Example: add two "motion sensor" services to the accessory
-    const motionSensorOneService = this.accessory.getService('Motion Sensor One Name') ||
-      this.accessory.addService(this.platform.Service.MotionSensor, 'Motion Sensor One Name', 'YourUniqueIdentifier-1');
+    const getCreateMotionDetector = ({motionDev})=>this.accessory.getService(MotionDevices[motionDev].name) ||
+    this.accessory.addService(this.platform.Service.MotionSensor, MotionDevices[motionDev].name, MotionDevices[motionDev].id);
 
-    const motionSensorTwoService = this.accessory.getService('Motion Sensor Two Name') ||
-      this.accessory.addService(this.platform.Service.MotionSensor, 'Motion Sensor Two Name', 'YourUniqueIdentifier-2');
+    for (const motionDev in MotionDevices){
+      getCreateMotionDetector({motionDev});
+    }
+
 
     /**
      * Updating characteristics values asynchronously.
@@ -78,16 +81,20 @@ export class XStatePlatformAccessory {
      *
      */
     let motionDetected = false;
+    this.platform.log.debug(`Creating 10 sec interval..`);
     setInterval(() => {
-      // EXAMPLE - inverse the trigger
-      motionDetected = !motionDetected;
 
-      // push the new value to HomeKit
-      motionSensorOneService.updateCharacteristic(this.platform.Characteristic.MotionDetected, motionDetected);
-      motionSensorTwoService.updateCharacteristic(this.platform.Characteristic.MotionDetected, !motionDetected);
+      for (const motionDev in MotionDevices){
+        motionDetected = !motionDetected;
 
-      this.platform.log.debug('Triggering motionSensorOneService:', motionDetected);
-      this.platform.log.debug('Triggering motionSensorTwoService:', !motionDetected);
+        const motionSensor=getCreateMotionDetector({motionDev});
+        this.platform.log.info(motionDev,motionSensor)
+
+        // push the new value to HomeKit
+        motionSensor.updateCharacteristic(this.platform.Characteristic.MotionDetected, motionDetected);
+      
+        this.platform.log.debug(`Triggering ${motionDev}:`,motionSensor, motionDetected);
+      }
     }, 10000);
   }
 
