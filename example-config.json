@@ -1,0 +1,48 @@
+{
+  "bridge": {
+      ...
+  },
+  "platforms": [
+    {
+      "platform": "MercedesPlatform",
+      "debug": false,
+      "cars": [
+        {
+          "name": "Mercedes A200",
+          "clientID": "1b851746-2x58-7y8r-6548-12ft58w159zu",
+          "clientSecret": "d896ct55-c85c-6363-9999-25iu6985mo10",
+          "vin": "WDD1234567N123456",
+          "model": "Mercedes A200",
+          "manufacturer": "Mercedes",
+          "maxRange": 800,
+          "polling": 60,
+          "tankBatteryType": "LIGHTBULB"
+        },
+        {
+          "name": "Mercedes CLA250",
+          "clientID": "1b851746-2x58-7y8r-6548-12ft58w159zu",
+          "clientSecret": "d896ct55-c85c-6363-9999-25iu6985mo10",
+          "vin": "WDD1234567N123456",
+          "model": "Mercedes B180",
+          "manufacturer": "Mercedes",
+          "maxRange": 600,
+          "polling": 120,
+          "electricVehicle": true,
+          "tankBatteryType": "HUMIDITY"
+        },
+        {
+          "name": "Mercedes B200",
+          "clientID": "1b851746-2x58-7y8r-6548-12ft58w159zu",
+          "clientSecret": "d896ct55-c85c-6363-9999-25iu6985mo10",
+          "vin": "WDD1234567N123456",
+          "model": "Mercedes B180",
+          "manufacturer": "Mercedes",
+          "maxRange": 600,
+          "polling": 120,
+          "hybridVehicle": true,
+          "tankBatteryType": "HUMIDITY"
+        }
+      ]
+    }
+  ]
+}
