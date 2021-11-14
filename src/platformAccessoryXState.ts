@@ -1,7 +1,7 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
 import { XStatePlatform } from './platformXState';
-import { DEFAULTS, MotionDevices } from './settings';
+import { DEFAULTS } from './settings';
 
 /**
  * Platform Accessory
@@ -17,7 +17,8 @@ export class XStatePlatformAccessory {
    */
   private exampleStates = {
     On: false,
-    Brightness: 100
+    Brightness: 100,
+    MotionDtected: false,
   };
 
   constructor(
@@ -63,12 +64,13 @@ export class XStatePlatformAccessory {
      * can use the same sub type id.)
      */
 
-    const getCreateMotionDetector = ({motionDev})=>this.accessory.getService(MotionDevices[motionDev].name) ||
-    this.accessory.addService(this.platform.Service.MotionSensor, MotionDevices[motionDev].name, MotionDevices[motionDev].id);
+    this.platform.log.debug(`dev`,accessory.context.device);
+    const motion = accessory.context.device.motionSensor;
+     
+    const getCreateMotionDetector = ({name, id})=>this.accessory.getService(name) ||
+    this.accessory.addService(this.platform.Service.MotionSensor, name, id);
 
-    for (const motionDev in MotionDevices){
-      getCreateMotionDetector({motionDev});
-    }
+    getCreateMotionDetector(motion);
 
 
     /**
@@ -80,21 +82,19 @@ export class XStatePlatformAccessory {
      * the `updateCharacteristic` method.
      *
      */
-    let motionDetected = false;
+    
     this.platform.log.debug(`Creating 10 sec interval..`);
     setInterval(() => {
 
-      for (const motionDev in MotionDevices){
-        motionDetected = !motionDetected;
 
-        const motionSensor=getCreateMotionDetector({motionDev});
-        this.platform.log.info(motionDev,motionSensor)
+      const motionSensor=getCreateMotionDetector(motion);
+      const lasVal = motionSensor.getCharacteristic(this.platform.Characteristic.MotionDetected)?.value;
 
-        // push the new value to HomeKit
-        motionSensor.updateCharacteristic(this.platform.Characteristic.MotionDetected, motionDetected);
+      // push the new value to HomeKit
+      motionSensor.updateCharacteristic(this.platform.Characteristic.MotionDetected, !lasVal);
       
-        this.platform.log.debug(`Triggering ${motionDev}:`,motionSensor, motionDetected);
-      }
+      this.platform.log.debug(`Triggering ${motion.name}:`,motionSensor.getCharacteristic(this.platform.Characteristic.MotionDetected), !lasVal);
+  
     }, 10000);
   }
 

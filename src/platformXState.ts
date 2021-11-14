@@ -65,7 +65,7 @@ export class XStatePlatform implements DynamicPlatformPlugin {
       // the cached devices we stored in the `configureAccessory` method above
       const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
 
-      this.log.info('Existing:',existingAccessory)
+      // this.log.info('Existing:',existingAccessory)
       if (existingAccessory) {
         // the accessory already exists
         this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);

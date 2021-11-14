@@ -20,21 +20,18 @@ export const DEFAULTS = {
 export const xstateDevices = [
   {
     id: 'ABCD',
-    name: 'TestLight1'
+    name: 'TestLight1',
+    motionSensor:  {
+      name:'Motion Sensor One Name',
+      id:'YourUniqueIdentifier-1'
+    },
   },
   {
     id: 'EFGH',
-    name: 'TestLight2'
+    name: 'TestLight2',
+    motionSensor:  {
+      name:'Motion Sensor Two Name',
+      id:'YourUniqueIdentifier-2'
+    }
   }
 ];
-
-export const MotionDevices = {
-  m1:    {
-    name:'Motion Sensor One Name',
-    id:'YourUniqueIdentifier-1'
-  },
-  m2: {
-    name:'Motion Sensor Two Name',
-    id:'YourUniqueIdentifier-2'
-  }
-}
